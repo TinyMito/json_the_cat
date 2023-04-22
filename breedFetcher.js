@@ -20,7 +20,7 @@ const fetchBreedDescription = function(breedName, callback) {
     const data = JSON.parse(body);
     
     // No error set as null and output the search data
-    return callback(null, data);
+    return callback(null, data[0].description);
   });
 };
 
