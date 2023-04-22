@@ -1,29 +1,27 @@
 const request = require('request');
-const breedName = process.argv.slice(2);
 
-if (breedName.length === 0) {
-  console.log('Please enter a breed name!');
-  return;
-}
-
-request(`https://api.thecatapi.com/v1/breeds/search?q=${breedName}`, (error, response, body) => {
-  if (error) {
-    console.log(error);
-    return;
+const fetchBreedDescription = function(breedName, callback) {
+  if (breedName.length === 0) {
+    // If the user forgot to enter the breed name
+    return callback('Please enter a breed name!');
   }
-  if (response) {
-    //console.log(response)
-  }
-  
-  if (body.length <= 2) {
-    console.log('Breed is not found!');
-    return;
-  }
+  request(`https://api.thecatapi.com/v1/breeds/search?q=${breedName}`, (error, response, body) => {
+    if (error) {
+      return callback(error);
+    }
+    if (response) {
+      //return callback(response);
+    }
+    
+    if (body.length <= 2) {
+      return callback('Breed is not found!');
+    }
 
-  //console.log(body.length)
-  //console.log(typeof body)
-  const data = JSON.parse(body);
-  console.log(data);
-  console.log(typeof data);
+    const data = JSON.parse(body);
+    
+    // No error set as null and output the search data
+    return callback(null, data);
+  });
+};
 
-});
+module.exports = { fetchBreedDescription };
